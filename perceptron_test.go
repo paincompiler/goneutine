@@ -2,7 +2,7 @@ package goneutine
 
 import "testing"
 
-func TestPerceptron_Output(t *testing.T) {
+func TestPerceptron_Evaluate(t *testing.T) {
 	bitwiseSumCases := [][]int64{
 		{0, 0, 0, 0},
 		{0, 1, 1, 0},
@@ -25,18 +25,23 @@ func bitwiseSum(x1, x2 int64) (sum, carry int64) {
 		bias   int64 = 3
 	)
 	pt0 := NewPerceptron(bias)
-	input1 := IWPair{x1, weight}
-	input2 := IWPair{x2, weight}
+	input1 := NewPerceptronInput(x1, weight)
+	input2 := NewPerceptronInput(x2, weight)
 
-	interOutput := pt0.Eval(input1, input2)
+	interOutput := pt0.Eval(IWPairs{input1, input2})
 
 	return pt0.Eval(
-			IWPair{pt0.Eval(
-				IWPair{interOutput, weight},
-				IWPair{x1, weight}), weight},
-			IWPair{pt0.Eval(
-				IWPair{interOutput, weight},
-				IWPair{x2, weight}), weight},
-		),
-		pt0.Eval(IWPair{interOutput, weight * 2})
+		IWPairs{
+			NewPerceptronInput(
+				pt0.Eval(IWPairs{
+					NewPerceptronInput(interOutput, weight),
+					NewPerceptronInput(x1, weight),
+				}), weight),
+			NewPerceptronInput(
+				pt0.Eval(IWPairs{
+					NewPerceptronInput(interOutput, weight),
+					NewPerceptronInput(x2, weight),
+				}), weight),
+		}),
+		pt0.Eval(IWPairs{NewPerceptronInput(interOutput, weight * 2)})
 }
