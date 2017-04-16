@@ -1,7 +1,7 @@
 package goneutine
 
 type Perceptron struct {
-	Bias int64 `json:"bias"`
+	bias int64 `json:"bias"`
 }
 
 type IWPair struct {
@@ -14,17 +14,21 @@ func (iwp IWPair) Eval() int64 {
 
 func NewPerceptron(bias int64) Perceptron {
 	return Perceptron{
-		Bias: bias,
+		bias: bias,
 	}
 }
 
-func (p Perceptron) Output(inputs ...IWPair) int64 {
+func (p Perceptron) Eval(inputs ...IWPair) int64 {
 	var sum int64
 	for _, i := range inputs {
 		sum += i.Eval()
 	}
-	if sum+p.Bias > 0 {
+	if sum+p.Bias() > 0 {
 		return 1
 	}
 	return 0
+}
+
+func (p Perceptron) Bias() int64 {
+	return p.bias
 }

@@ -28,15 +28,15 @@ func bitwiseSum(x1, x2 int64) (sum, carry int64) {
 	input1 := IWPair{x1, weight}
 	input2 := IWPair{x2, weight}
 
-	interOutput := pt0.Output(input1, input2)
+	interOutput := pt0.Eval(input1, input2)
 
-	return pt0.Output(
-			IWPair{pt0.Output(
+	return pt0.Eval(
+			IWPair{pt0.Eval(
 				IWPair{interOutput, weight},
 				IWPair{x1, weight}), weight},
-			IWPair{pt0.Output(
+			IWPair{pt0.Eval(
 				IWPair{interOutput, weight},
 				IWPair{x2, weight}), weight},
 		),
-		pt0.Output(IWPair{interOutput, weight * 2})
+		pt0.Eval(IWPair{interOutput, weight * 2})
 }
